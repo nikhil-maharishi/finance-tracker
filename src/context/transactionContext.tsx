@@ -1,7 +1,7 @@
 import { createContext, useReducer, type Dispatch, type ReactNode } from "react";
 
 export type Transaction = {
-    id:string
+  id:string
   amount: string;
   category: string;
   date: number;
@@ -24,7 +24,7 @@ function transactionReducer(state:Transaction[], action:Action) {
     case "ADD":
       return [...state, action.payload];
     case "REMOVE":
-      return state.filter(item => item.id !== action.payload);
+      return state.filter(item => item.category !== action.payload);
     default:
       return state;
   }
@@ -39,5 +39,36 @@ export function TransactionProvider({ children }:TransactionProviderProps) {
     <TransactionContext.Provider value={{ state, dispatch }}>
       {children}
     </TransactionContext.Provider>
+  );
+}
+
+type BudgetAction =
+  | { type: "ADD"; payload: number }
+
+export type BudgetContextType = {
+  state: number;
+  dispatch: Dispatch<BudgetAction>;
+};
+
+export const BudgetContext = createContext<BudgetContextType | undefined>(undefined);
+
+function budgetReducer(state:number, action:BudgetAction) {
+  switch (action.type) {
+    case "ADD":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+type BudgetProviderProps = {
+  children: ReactNode;
+};
+export function BudgetProvider({ children }:BudgetProviderProps) {
+  const [state, dispatch] = useReducer(budgetReducer, 0);
+
+  return (
+    <BudgetContext.Provider value={{ state, dispatch }}>
+      {children}
+    </BudgetContext.Provider>
   );
 }

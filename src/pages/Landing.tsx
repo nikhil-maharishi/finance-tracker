@@ -34,7 +34,7 @@ const Landing = () => {
                     <div id="catChips" className="chips-row" role="group">
                         <button className="chip chip--active" type="button">All Categories</button>
                         {categories.map((cat: Category) => (
-                            <button key={cat.label} className="chip" type="button">{cat.label}</button>
+                            <button key={cat.id} className="chip" type="button">{cat?.icon} {cat.label}</button>
                         ))}
                     </div>
 

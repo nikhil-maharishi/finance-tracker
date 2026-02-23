@@ -5,6 +5,11 @@ import NoData from './NoData';
 
 const Expense = () => {
     const { state } = useContext(TransactionContext)!;
+
+    const getTotalExpense = () => {
+        return state.reduce((sum, ele) => sum + Number(ele.amount), 0)
+
+    }
     
     return (
         <section id="panelList">
@@ -18,10 +23,10 @@ const Expense = () => {
             {state.length> 0 && 
                 <div id="totalFooter" className="total-footer">
                     <span className="total-footer__count">
-                        <span id="expenseCount">1</span> Entries
+                        <span id="expenseCount">{state.length}</span> Entries
                     </span>
                     <span className="total-footer__amount">
-                        Total: <span id="totalAmt">₹340.00</span>
+                        Total: <span id="totalAmt">₹{getTotalExpense()}</span>
                     </span>
                 </div>
             }

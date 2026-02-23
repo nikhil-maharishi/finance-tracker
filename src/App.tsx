@@ -1,12 +1,14 @@
 import './App.css'
-import { TransactionProvider } from './context/transactionContext'
+import { BudgetProvider, TransactionProvider } from './context/transactionContext'
 import Landing from './pages/Landing'
 
 function App() {
   return (
+    <BudgetProvider>
       <TransactionProvider>
         <Landing/>
       </TransactionProvider>
+      </BudgetProvider>
   )
 }
 

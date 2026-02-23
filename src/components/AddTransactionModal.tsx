@@ -11,11 +11,11 @@ export type ModalProps = {
 };
 const AddTransactionModal = ({ showModal, setShowModal }: ModalProps) => {
     const { dispatch } = useContext(TransactionContext)!;
-    const { register, handleSubmit, formState: { errors }, } = useForm({
+    const { register, handleSubmit,reset, formState: { errors }, } = useForm({
         resolver: yupResolver(transactionSchema),
         defaultValues: {
             amount: '',
-            date: '',
+            date: new Date().getDate().toString(),
             category: '',
             description: ''
         },
@@ -23,9 +23,14 @@ const AddTransactionModal = ({ showModal, setShowModal }: ModalProps) => {
     });
 
     const onSubmit = (data: any) => {
-        console.log(errors);
         dispatch({ type: "ADD", payload: data });
-        console.log("Form Data:", data);
+          reset({
+            amount: '',
+            date: '',
+            category: '',
+            description: ''
+        });
+        setShowModal()
     };
 
     return (
@@ -73,7 +78,7 @@ const AddTransactionModal = ({ showModal, setShowModal }: ModalProps) => {
                         <select id="fCategory" className="input-field"  {...register("category")}>
                             <option selected disabled value="">Select Category</option>
                             {categories.map((cat: Category) => (
-                                <option key={cat.value} value={cat.value}>{cat.label}</option>
+                                <option key={cat.id} value={cat.label}>{cat?.icon} {cat.label}</option>
                             ))}
                         </select>
                         {errors.category && (
