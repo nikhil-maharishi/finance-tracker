@@ -4,7 +4,7 @@ export type Transaction = {
   id:string
   amount: string;
   category: string;
-  date: number;
+  date: string;
   description: string;
 };
 
@@ -46,28 +46,28 @@ type BudgetAction =
   | { type: "ADD"; payload: number }
 
 export type BudgetContextType = {
-  state: number;
+  budget: number;
   dispatch: Dispatch<BudgetAction>;
 };
 
 export const BudgetContext = createContext<BudgetContextType | undefined>(undefined);
 
-function budgetReducer(state:number, action:BudgetAction) {
+function budgetReducer(budget:number, action:BudgetAction) {
   switch (action.type) {
     case "ADD":
       return action.payload;
     default:
-      return state;
+      return budget;
   }
 }
 type BudgetProviderProps = {
   children: ReactNode;
 };
 export function BudgetProvider({ children }:BudgetProviderProps) {
-  const [state, dispatch] = useReducer(budgetReducer, 0);
+  const [budget, dispatch] = useReducer(budgetReducer, 0);
 
   return (
-    <BudgetContext.Provider value={{ state, dispatch }}>
+    <BudgetContext.Provider value={{ budget, dispatch }}>
       {children}
     </BudgetContext.Provider>
   );

@@ -1,12 +1,52 @@
-import React from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import Insights from '../components/Insights'
 import Expense from '../components/Expense'
 import Header from '../components/Header'
 import AnalyticsCard from '../components/AnalyticsCard'
 import { categories } from '../utils/data'
 import type { Category } from '../utils/interface'
+import { BudgetContext, TransactionContext } from '../context/transactionContext'
 
 const Landing = () => {
+    const { budget } = useContext(BudgetContext)!
+    const { state } = useContext(TransactionContext)!;
+    const [category, setCategory] = useState('')
+
+    const getTotalExpense = useMemo(() => {
+        return state.reduce((sum, ele) => sum + Number(ele.amount), 0)
+
+    },[state])
+
+    const getCurrentMonthExpense = useMemo(() => {
+        const currentMonth = new Date().getMonth() + 1;
+
+        return state.reduce((sum, ele) => {
+            const expenseMonth = ele.date.split("-")[1];
+
+            const formattedMonth =
+                currentMonth <= 9 ? "0" + currentMonth : String(currentMonth);
+
+            if (expenseMonth === formattedMonth) {
+                return sum + Number(ele.amount);
+            }
+
+            return sum;
+        }, 0);
+    }, [state]);
+
+    const getAvgDayExpense = useMemo(() => {
+        if (!state.length) return 0;
+
+        const totalExpense = getTotalExpense
+        const uniqueDays = new Set(
+            state.map((expense) => expense.date)
+        );
+
+        const numberOfDays = uniqueDays.size;
+
+        return (totalExpense / numberOfDays).toFixed(2);
+    },[state]);
+
 
     return (
         <>
@@ -14,10 +54,10 @@ const Landing = () => {
             <Header />
             <main className="page-wrapper space-y-7" role="main">
                 <div className="stat-grid">
-                    <AnalyticsCard title='FILTERED TOTAL' value='0.00' />
-                    <AnalyticsCard title='THIS MONTH' value='0.00' />
-                    <AnalyticsCard title='AVG / DAY' value='0.00' />
-                    <AnalyticsCard title='BUDGET LIMIT' value='--' modalType='budget' />
+                    <AnalyticsCard title='TOTAL' value={getTotalExpense?.toString()} />
+                    <AnalyticsCard title='THIS MONTH' value={getCurrentMonthExpense.toString()} />
+                    <AnalyticsCard title='AVG / DAY' value={getAvgDayExpense.toString()} />
+                    <AnalyticsCard title='BUDGET LIMIT' value={budget.toString()} modalType='budget' />
                 </div>
                 <div className="tabs" role="tablist">
                     <button className="tab tab--active">
@@ -32,9 +72,11 @@ const Landing = () => {
 
                     {/* <!-- Category filter --> */}
                     <div id="catChips" className="chips-row" role="group">
-                        <button className="chip chip--active" type="button">All Categories</button>
+                        <button className={`chip ${category == '' ? `chip--active` : ''}`} type="button" onClick={() => setCategory('')}>All Categories</button>
                         {categories.map((cat: Category) => (
-                            <button key={cat.id} className="chip" type="button">{cat?.icon} {cat.label}</button>
+                            <button key={cat.id} className={`chip ${category == cat?.label ? `chip--active` : ''}`} type="button" onClick={() => setCategory(cat?.label)}>
+                                {cat?.icon} {cat.label}
+                            </button>
                         ))}
                     </div>
 
@@ -59,7 +101,7 @@ const Landing = () => {
                     </div>
                 </div>
 
-                <Expense />
+                <Expense category={category} />
                 <Insights />
             </main>
 

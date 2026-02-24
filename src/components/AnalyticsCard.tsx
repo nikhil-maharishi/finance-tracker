@@ -8,7 +8,7 @@ type cardProp = {
   modalType?: string
 }
 const AnalyticsCard = ({ title, value, modalType }: cardProp) => {
-  const { state } = useContext(BudgetContext)!
+  
   const [showModalType, setShowModalType] = useState<string| undefined>('')
   const openModal = (): void => {
         setShowModalType(modalType);
@@ -22,7 +22,7 @@ const AnalyticsCard = ({ title, value, modalType }: cardProp) => {
       <AddBudgetLimit showModal={showModalType == 'budget'} setShowModal={closeModal} />
       <div className="stat-card stat-card--glow" onClick={openModal} >
         <p className="stat-card__label">{title}</p>
-        <p id="statFiltered" className="stat-card__value text-amber">₹{modalType == 'budget' ?state :value}</p>
+        <p id="statFiltered" className="stat-card__value text-amber">₹{value}</p>
       </div>
     </>
 

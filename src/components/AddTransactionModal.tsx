@@ -10,12 +10,13 @@ export type ModalProps = {
     setShowModal: () => void;
 };
 const AddTransactionModal = ({ showModal, setShowModal }: ModalProps) => {
+    const currentDate = new Date()
     const { dispatch } = useContext(TransactionContext)!;
     const { register, handleSubmit,reset, formState: { errors }, } = useForm({
         resolver: yupResolver(transactionSchema),
         defaultValues: {
             amount: '',
-            date: new Date().getDate().toString(),
+            date: currentDate.toString(),
             category: '',
             description: ''
         },
