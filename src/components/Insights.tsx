@@ -3,7 +3,7 @@ import InsightBar from './InsightBar'
 
 const Insights = () => {
     return (
-        <section id="panelInsights" className="hidden space-y-4" role="tabpanel" aria-labelledby="tabInsights">
+        <section id="panelInsights" className="space-y-4" role="tabpanel" aria-labelledby="tabInsights">
             <div className="breakdown-section">
                 <h2 className="breakdown-section__title">Spending by Category</h2>
                 <div id="categoryBars" className="space-y-4">

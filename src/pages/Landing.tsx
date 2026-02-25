@@ -1,21 +1,27 @@
 import React, { useContext, useMemo, useState } from 'react'
 import Insights from '../components/Insights'
-import Expense from '../components/Expense'
+import Expense, { type duration } from '../components/Expense'
 import Header from '../components/Header'
 import AnalyticsCard from '../components/AnalyticsCard'
 import { categories } from '../utils/data'
 import type { Category } from '../utils/interface'
 import { BudgetContext, TransactionContext } from '../context/transactionContext'
 
+type tab = 'Expense'|'Insight'
+
 const Landing = () => {
     const { budget } = useContext(BudgetContext)!
     const { state } = useContext(TransactionContext)!;
     const [category, setCategory] = useState('')
+    const [duration, setDuration] = useState<duration>('')
+    const [tab, setTab] = useState<tab>('Expense')
+
+
 
     const getTotalExpense = useMemo(() => {
         return state.reduce((sum, ele) => sum + Number(ele.amount), 0)
 
-    },[state])
+    }, [state])
 
     const getCurrentMonthExpense = useMemo(() => {
         const currentMonth = new Date().getMonth() + 1;
@@ -45,7 +51,7 @@ const Landing = () => {
         const numberOfDays = uniqueDays.size;
 
         return (totalExpense / numberOfDays).toFixed(2);
-    },[state]);
+    }, [state]);
 
 
     return (
@@ -60,10 +66,11 @@ const Landing = () => {
                     <AnalyticsCard title='BUDGET LIMIT' value={budget.toString()} modalType='budget' />
                 </div>
                 <div className="tabs" role="tablist">
-                    <button className="tab tab--active">
+                    <button className={`tab ${tab == 'Expense' ? `tab--active` : ''}`} onClick={() => setTab('Expense')}>
                         Expenses
                     </button>
-                    <button className="tab" id="tabInsights">
+                    <button className={`tab ${tab == 'Insight' ? `tab--active` : ''}`} id="tabInsights"
+                        onClick={() => setTab('Insight')}>
                         Insights
                     </button>
                 </div>
@@ -83,9 +90,9 @@ const Landing = () => {
                     {/* <!-- Date range + sort --> */}
                     <div className="filter-row">
                         <div id="rangeChips" className="chips-row">
-                            <button className="chip chip--active" type="button">All Time</button>
-                            <button className="chip" type="button">This Month</button>
-                            <button className="chip" type="button">This Week</button>
+                            <button className={`chip ${duration == '' ? `chip--active` : ''}`} type="button" onClick={() => setDuration('')}>All Time</button>
+                            <button className={`chip ${duration == 'month' ? `chip--active` : ''}`} type="button" onClick={() => setDuration('month')}>This Month</button>
+                            <button className={`chip ${duration == 'week' ? `chip--active` : ''}`} type="button" onClick={() => setDuration('week')}>This Week</button>
                         </div>
                         <div className="filter-row__sort">
                             <button className="btn btn-ghost" type="button">
@@ -100,9 +107,11 @@ const Landing = () => {
                         </div>
                     </div>
                 </div>
-
-                <Expense category={category} />
-                <Insights />
+                    {
+                
+                        tab == 'Expense' ? <Expense category={category} duration={duration} /> :<Insights />
+                    }
+                
             </main>
 
         </>
