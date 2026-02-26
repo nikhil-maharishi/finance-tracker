@@ -53,12 +53,26 @@ const Landing = () => {
         return (totalExpense / numberOfDays).toFixed(2);
     }, [state]);
 
+    const calculateBudgetUsage = useMemo(() => {
+        if (budget === 0) return 0;
+        return ((getTotalExpense / budget) * 100).toFixed(2);
+    }, [getTotalExpense, budget]);
+
 
     return (
         <>
             <div className="bg-glow" aria-hidden="true"></div>
             <Header />
             <main className="page-wrapper space-y-7" role="main">
+                <div id="budgetAlert" className={`budget-alert ${Number(calculateBudgetUsage) < 70 ? 'hidden' : ''}`} role="alert" aria-live="polite">
+                    <div className="budget-alert__header">
+                        <span className="budget-alert__badge">⚠ Budget Alert</span>
+                        <span id="budgetAlertText" className="budget-alert__amount">₹{getTotalExpense} / ₹{budget} ({getTotalExpense > 0 ? calculateBudgetUsage : 0}%)</span>
+                    </div>
+                    <div className="progress-track">
+                        <div id="budgetAlertFill" className="progress-fill progress-fill--danger" style={{ width: `${calculateBudgetUsage}%` }}></div>
+                    </div>
+                </div>
                 <div className="stat-grid">
                     <AnalyticsCard title='TOTAL' value={getTotalExpense?.toString()} />
                     <AnalyticsCard title='THIS MONTH' value={getCurrentMonthExpense.toString()} />
@@ -94,7 +108,7 @@ const Landing = () => {
                             <button className={`chip ${duration == 'month' ? `chip--active` : ''}`} type="button" onClick={() => setDuration('month')}>This Month</button>
                             <button className={`chip ${duration == 'week' ? `chip--active` : ''}`} type="button" onClick={() => setDuration('week')}>This Week</button>
                         </div>
-                        <div className="filter-row__sort">
+                        {/* <div className="filter-row__sort">
                             <button className="btn btn-ghost" type="button">
                                 <span id="sortLabel">Date ↓ Newest</span>
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -104,7 +118,7 @@ const Landing = () => {
                                     <path d="M21 13v2a4 4 0 01-4 4H3" />
                                 </svg>
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                     {

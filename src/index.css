@@ -366,7 +366,7 @@ body {
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .progress-fill--amber  { background: var(--clr-amber); }
-.progress-fill--danger { background: linear-gradient(90deg, var(--clr-amber), var(--clr-danger-dark)); }
+.progress-fill--danger { background:  var(--clr-danger-dark); }
 
 /* ── Expense list panel ────────────────────────────────────── */
 .expense-list-wrapper {
