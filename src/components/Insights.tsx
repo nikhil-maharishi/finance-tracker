@@ -1,7 +1,6 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import InsightBar from './InsightBar'
 import { TransactionContext } from '../context/transactionContext';
-import { date } from 'yup';
 
 const Insights = () => {
     const { state } = useContext(TransactionContext)!;

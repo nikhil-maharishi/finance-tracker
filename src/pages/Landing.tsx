@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import Insights from '../components/Insights'
 import Expense, { type duration } from '../components/Expense'
 import Header from '../components/Header'

@@ -1,6 +1,5 @@
-import { useContext, useState } from "react"
+import { useState } from "react"
 import AddBudgetLimit from "./AddBudgetLimit"
-import { BudgetContext } from "../context/transactionContext"
 
 type cardProp = {
   title: string,
